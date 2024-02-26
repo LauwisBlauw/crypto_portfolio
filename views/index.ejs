@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Portfolio</title>
+    <style>
+        .loadingIndicator { display: none; }
+        .errorMessage { color: red; }
+        .cryptoRow { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Total Value: $<span id="totalValue">0</span></h1>
+    <div id="globalErrorMessage" class="errorMessage"></div>
+    <div id="rowsContainer">
+        <!-- Initial row -->
+        <div class="cryptoRow">
+            <input list="coinsList" class="coinInput" placeholder="Select coin...">
+            <input type="number" class="unitsInput" placeholder="Amount" step="any">
+            <button type="button" class="deleteRow">Delete</button>
+            <div class="rowErrorMessage" class="errorMessage"></div>
+        </div>
+    </div>
+    <datalist id="coinsList">
+        <% allCoins.forEach(function(coin) { %>
+            <option value="<%= coin.id %>"><%= coin.name %></option>
+        <% }); %>
+    </datalist>
+    <button id="addRow">+</button>
+    <div id="loadingIndicator" class="loadingIndicator">Loading...</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rowsContainer = document.getElementById('rowsContainer');
+            document.getElementById('addRow').addEventListener('click', function () {
+                addRow();
+                updateDeleteButtonsVisibility();
+            });
+            rowsContainer.addEventListener('click', function (event) {
+                if (event.target.classList.contains('deleteRow')) {
+                    event.target.closest('.cryptoRow').remove();
+                    updateDeleteButtonsVisibility();
+                    calculateTotalValue();
+                }
+            });
+            document.addEventListener('input', handleInputChange);
+
+            function addRow() {
+                const newRow = document.createElement('div');
+                newRow.classList.add('cryptoRow');
+                newRow.innerHTML = `
+                <input list="coinsList" class="coinInput" placeholder="Select coin">
+                <input type="number" class="unitsInput" placeholder="Amount" step="any">
+                <button type="button" class="deleteRow">Delete</button>
+                <div class="rowErrorMessage" class="errorMessage"></div>
+            `;
+                rowsContainer.appendChild(newRow);
+            }
+
+            function updateDeleteButtonsVisibility() {
+                const rows = document.querySelectorAll('.cryptoRow');
+                const buttons = rowsContainer.querySelectorAll('.deleteRow');
+                if (rows.length === 1) {
+                    buttons.forEach(button => button.style.display = 'none');
+                } else {
+                    buttons.forEach(button => button.style.display = 'inline');
+                }
+            }
+
+            async function handleInputChange(e) {
+                // Optionally, clear global error message on new input
+                document.getElementById('globalErrorMessage').textContent = '';
+                if (e.target.classList.contains('unitsInput') || e.target.classList.contains('coinInput')) {
+                    calculateTotalValue();
+                }
+            }
+
+            async function calculateTotalValue() {
+                document.getElementById('loadingIndicator').style.display = 'block';
+                let totalValue = 0;
+                const rows = document.querySelectorAll('.cryptoRow');
+                for (let row of rows) {
+                    const coinInput = row.querySelector('.coinInput').value;
+                    const unitsInput = row.querySelector('.unitsInput');
+                    const units = parseFloat(unitsInput.value);
+                    const errorMessageDiv = row.querySelector('.rowErrorMessage');
+                    errorMessageDiv.textContent = ''; // Clear previous error messages
+
+                    if (coinInput && !isNaN(units) && units > 0) {
+                        try {
+                            const response = await fetch(`/price?coin=${coinInput}`);
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                errorMessageDiv.textContent = errorData.message || 'Error fetching price';
+                                continue;
+                            }
+                            const data = await response.json();
+                            totalValue += data.price * units;
+                        } catch (error) {
+                            console.error('Error fetching price:', error);
+                            document.getElementById('globalErrorMessage').textContent = 'There was a problem calculating the total value.';
+                        }
+                    }
+                }
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('totalValue').textContent = totalValue.toFixed(2);
+            }
+            updateDeleteButtonsVisibility();
+        });
+    </script>
+</body>
+</html>
