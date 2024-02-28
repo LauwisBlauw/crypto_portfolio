@@ -1,0 +1,128 @@
+/* Main background color */
+body {
+    background-color: #F3F8FF;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300; /* Light font weight */
+}
+
+ h2, h3, h4, h5, h6, p, input, select, button, .errorMessage {
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300; /* Apply the light font weight consistently */
+}
+
+/* Header and titles */
+h1 {
+    color: #49108B;
+    font-size: 4rem; /* Correct property for setting font size */
+    text-align: center; /* Centers the text horizontally */
+}
+
+h2 {
+    text-align: center;
+    font-size: 3rem;
+}
+
+/* Currency select box styling */
+#currencySelect {
+    background-color: #E26EE5;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Input fields styling */
+.inputGroup input {
+    border: 2px solid #7E30E1;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+/* Button styling */
+button {
+    background-color: #7E30E1;
+    color: #FFFFFF;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 50px;
+    width: 90px;
+}
+
+button:hover {
+    background-color: #49108B;
+}
+
+/* Error message styling */
+.errorMessage {
+    color: #E26EE5;
+    margin: 10px 0;
+} 
+/* Loading indicator */
+#loadingIndicator {
+    color: #49108B;
+}
+
+/* Delete button specific styling */
+.deleteRow:hover {
+    background-color: #E26EE5;
+    color: #F3F8FF;
+    transform: rotate(-15deg); /* Rotate icon slightly to simulate lid opening */
+}
+
+
+/* Row and input group styling */
+.cryptoRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputGroup {
+    flex-grow: 1;
+    margin-right: 10px; /* Add some space between input group and delete button */
+}
+
+/* Plus button styling */
+#addRow {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#addRow:hover {
+    background-color: #E26EE5; /* Change color on hover */
+    transform: rotate(45deg); /* Rotate the plus button */
+}
+
+/* Additional styles for icons (if using Font Awesome) */
+.deleteRow i, #addRow i {
+    margin-right: 5px;
+}
+
+.deleteRow {
+    transition: transform 0.3s ease; /* Smooth transition for transform changes */
+}
+
+.currency-select-container {
+    position: absolute; /* or 'fixed' if you want it to stay in place on scroll */
+    top: 0;
+    right: 0;
+    padding: 20px; /* Adds some space around the container */
+}
+
+body {
+    margin: 0; /* Removes default body margin to ensure alignment to the very top and right */
+    /* Other styles remain unchanged */
+}
+
+#currencySelect {
+    /* Your existing styles for the select box */
+    background-color: #E26EE5;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}

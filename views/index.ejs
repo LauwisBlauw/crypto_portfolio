@@ -4,110 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Portfolio</title>
-    <style>
-        .loadingIndicator { display: none; }
-        .errorMessage { color: red; }
-        .cryptoRow { margin-bottom: 10px; }
-    </style>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
+
+
 </head>
 <body>
-    <h1>Total Value: $<span id="totalValue">0</span></h1>
-    <div id="globalErrorMessage" class="errorMessage"></div>
+    <h1>Crypto Portfolio</h1>
+    <h2>Total Value: <span id="totalValue">0.00</span></h2>
+    <div class="currency-select-container">
+        <label for="currencySelect">Currency:</label>
+        <select id="currencySelect">
+            <option value="usd" selected>$USD</option>
+            <option value="eur">€EUR</option>
+            <option value="gbp">£GBP</option>
+            <option value="jpy">¥JPY</option>
+            <option value="cad">$CAD</option>
+            <option value="aud">$AUD</option>
+            <option value="chf">₣CHF</option>
+            <!-- Add more currencies as needed -->
+        </select>
+    </div>
     <div id="rowsContainer">
-        <!-- Initial row -->
         <div class="cryptoRow">
-            <input list="coinsList" class="coinInput" placeholder="Select coin...">
-            <input type="number" class="unitsInput" placeholder="Amount" step="any">
-            <button type="button" class="deleteRow">Delete</button>
-            <div class="rowErrorMessage" class="errorMessage"></div>
+            <div class="inputGroup">
+                <input list="coinsList" class="coinInput" placeholder="Select coin">
+                <input type="number" class="unitsInput" placeholder="Amount" step="any">
+            </div>
         </div>
     </div>
-    <datalist id="coinsList">
-        <% allCoins.forEach(function(coin) { %>
-            <option value="<%= coin.id %>"><%= coin.name %></option>
-        <% }); %>
-    </datalist>
+    
     <button id="addRow">+</button>
+    <% if (allCoins.length === 0) { %>
+        <p id="coinsListError" class="errorMessage">There was an error retrieving the list of coins. Please try again later.</p>
+    <% } else { %>
+        <datalist id="coinsList">
+            <% allCoins.forEach(function(coin) { %>
+                <option value="<%= coin.id %>"><%= coin.name %></option>
+            <% }); %>
+        </datalist>
+    <% } %>
+    <div id="globalErrorMessage" class="errorMessage"></div>
     <div id="loadingIndicator" class="loadingIndicator">Loading...</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const rowsContainer = document.getElementById('rowsContainer');
-            document.getElementById('addRow').addEventListener('click', function () {
-                addRow();
-                updateDeleteButtonsVisibility();
-            });
-            rowsContainer.addEventListener('click', function (event) {
-                if (event.target.classList.contains('deleteRow')) {
-                    event.target.closest('.cryptoRow').remove();
-                    updateDeleteButtonsVisibility();
-                    calculateTotalValue();
-                }
-            });
-            document.addEventListener('input', handleInputChange);
+            const currencySymbolMap = {
+                'usd': '$',
+                'eur': '€',
+                'gbp': '£',
+                'jpy': '¥',
+                'cad': '$',
+                'aud': '$',
+                'sgd': '$',
+                'hkd': '$',
+                'nzd': '$',
+                'chf': '₣',
+                // Add more currencies and their symbols as needed
+            };
+
+            document.getElementById('currencySelect').addEventListener('change', calculateTotalValue);
+            document.getElementById('addRow').addEventListener('click', addRow);
+            document.getElementById('rowsContainer').addEventListener('input', calculateTotalValue);
+
+            // Initially call addDeleteButtons to the existing row
+            addDeleteButtons();
 
             function addRow() {
+                const rowsContainer = document.getElementById('rowsContainer');
                 const newRow = document.createElement('div');
                 newRow.classList.add('cryptoRow');
                 newRow.innerHTML = `
-                <input list="coinsList" class="coinInput" placeholder="Select coin">
-                <input type="number" class="unitsInput" placeholder="Amount" step="any">
-                <button type="button" class="deleteRow">Delete</button>
-                <div class="rowErrorMessage" class="errorMessage"></div>
-            `;
+                    <div class="inputGroup">
+                        <input list="coinsList" class="coinInput" placeholder="Select coin">
+                        <input type="number" class="unitsInput" placeholder="Amount" step="any">
+                    </div>
+                    <button type="button" class="btn deleteRow"><i class="fas fa-trash"></i></button>
+                `;
                 rowsContainer.appendChild(newRow);
+                newRow.querySelector('.deleteRow').addEventListener('click', deleteRow);
+                updateDeleteButtonsVisibility();
+            }
+
+            function addDeleteButtons() {
+                const rows = document.querySelectorAll('.cryptoRow');
+                rows.forEach(row => {
+                    if (!row.querySelector('.deleteRow')) {
+                        // Create the delete button
+                        const deleteButton = document.createElement('button');
+                        deleteButton.type = 'button';
+                        deleteButton.className = 'btn deleteRow'; // Bootstrap button class and your class
+                        deleteButton.style.display = 'none'; // Initially hidden
+
+                        // Create the Font Awesome icon element
+                        const icon = document.createElement('i');
+                        icon.className = 'fas fa-trash'; // Font Awesome trash icon class
+                        deleteButton.appendChild(icon); // Append the icon to the button
+
+                        // Add click event listener for delete functionality
+                        deleteButton.addEventListener('click', deleteRow);
+
+                        // Append the delete button to the row
+                        row.appendChild(deleteButton);
+                    }
+                });
+    updateDeleteButtonsVisibility(); // Make sure visibility is updated accordingly
+}
+
+
+            function deleteRow() {
+                this.parentElement.remove();
+                calculateTotalValue();
+                updateDeleteButtonsVisibility();
             }
 
             function updateDeleteButtonsVisibility() {
-                const rows = document.querySelectorAll('.cryptoRow');
-                const buttons = rowsContainer.querySelectorAll('.deleteRow');
-                if (rows.length === 1) {
-                    buttons.forEach(button => button.style.display = 'none');
+                const deleteButtons = document.querySelectorAll('.deleteRow');
+                if (deleteButtons.length > 1) {
+                    deleteButtons.forEach(button => button.style.display = '');
                 } else {
-                    buttons.forEach(button => button.style.display = 'inline');
-                }
-            }
-
-            async function handleInputChange(e) {
-                // Optionally, clear global error message on new input
-                document.getElementById('globalErrorMessage').textContent = '';
-                if (e.target.classList.contains('unitsInput') || e.target.classList.contains('coinInput')) {
-                    calculateTotalValue();
+                    deleteButtons.forEach(button => button.style.display = 'none');
                 }
             }
 
             async function calculateTotalValue() {
-                document.getElementById('loadingIndicator').style.display = 'block';
+                const currency = document.getElementById('currencySelect').value;
                 let totalValue = 0;
                 const rows = document.querySelectorAll('.cryptoRow');
-                for (let row of rows) {
+
+                for (const row of rows) {
                     const coinInput = row.querySelector('.coinInput').value;
                     const unitsInput = row.querySelector('.unitsInput');
-                    const units = parseFloat(unitsInput.value);
-                    const errorMessageDiv = row.querySelector('.rowErrorMessage');
-                    errorMessageDiv.textContent = ''; // Clear previous error messages
+                    const units = parseFloat(unitsInput.value) || 0;
 
-                    if (coinInput && !isNaN(units) && units > 0) {
+                    if (coinInput && units > 0) {
                         try {
-                            const response = await fetch(`/price?coin=${coinInput}`);
+                            const response = await fetch(`/price?coin=${coinInput}&currency=${currency}`);
                             if (!response.ok) {
-                                const errorData = await response.json();
-                                errorMessageDiv.textContent = errorData.message || 'Error fetching price';
-                                continue;
+                                throw new Error(response.status === 429 ? 'Rate limit exceeded. Please wait a moment before trying again.' : 'Failed to fetch price');
                             }
                             const data = await response.json();
                             totalValue += data.price * units;
                         } catch (error) {
                             console.error('Error fetching price:', error);
-                            document.getElementById('globalErrorMessage').textContent = 'There was a problem calculating the total value.';
+                            document.getElementById('globalErrorMessage').textContent = error.message;
+                            return;
                         }
                     }
                 }
-                document.getElementById('loadingIndicator').style.display = 'none';
-                document.getElementById('totalValue').textContent = totalValue.toFixed(2);
+
+                document.getElementById('totalValue').textContent = `${currencySymbolMap[currency] || ''}${totalValue.toFixed(2)}`;
             }
-            updateDeleteButtonsVisibility();
         });
     </script>
+
 </body>
 </html>

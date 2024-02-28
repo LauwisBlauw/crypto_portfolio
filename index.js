@@ -1,76 +1,76 @@
+// Use ES6 import syntax for express and axios
 import express from 'express';
 import axios from 'axios';
 import rateLimit from 'express-rate-limit';
-import NodeCache from 'node-cache';
-import { check, validationResult } from 'express-validator';
 
 const app = express();
-const priceCache = new NodeCache({ stdTTL: 300 }); // Cache prices for 5 minutes
+const port = process.env.PORT || 3000;
 
+// Set EJS as the template engine
 app.set('view engine', 'ejs');
+
+// Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-// Rate limiter configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
-  message: 'Too many requests, please try again later.'
+// Apply a rate limit to the /price endpoint to prevent abuse
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: 'Too many requests, please try again after a minute.'
 });
 
-// Apply rate limiting to all requests
-app.use(limiter);
-
-const fetchAllCoins = async () => {
+// Function to fetch cryptocurrencies sorted by market cap
+async function fetchCoinsSortedByMarketCap(currency = 'usd') {
   try {
-    const response = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+    const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+      params: {
+        vs_currency: currency,
+        order: 'market_cap_desc',
+        per_page: 250,
+        page: 1,
+        sparkline: false,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Error fetching all coins:', error);
+    console.error('Error fetching coins:', error);
     return [];
   }
-};
+}
 
+// Home route that renders the index.ejs template with sorted coins data
 app.get('/', async (req, res) => {
-  const allCoins = await fetchAllCoins();
-  res.render('index', { allCoins });
+  const defaultCurrency = 'usd'; // Default currency can be dynamic based on user preference or geolocation
+  const coinsSortedByMarketCap = await fetchCoinsSortedByMarketCap(defaultCurrency);
+  res.render('index', { allCoins: coinsSortedByMarketCap, currency: defaultCurrency });
 });
 
-// Price endpoint with input validation
-app.get('/price', [
-  check('coin').not().isEmpty().withMessage('Coin ID is required')
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+// Apply the rate limiter middleware to the /price endpoint
+app.use('/price', apiLimiter);
 
-  const { coin } = req.query;
-  const cacheKey = `price-${coin}`;
-  const cachedPrice = priceCache.get(cacheKey);
-
-  if (cachedPrice) {
-    return res.json({ price: cachedPrice });
-  }
-
+// Route to fetch the price of a specific cryptocurrency in a selected currency
+app.get('/price', async (req, res) => {
+  const { coin, currency = 'usd' } = req.query;
   try {
     const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price`, {
       params: {
         ids: coin,
-        vs_currencies: 'usd',
+        vs_currencies: currency,
       },
     });
-    const price = response.data[coin]?.usd;
-    if (price !== undefined) {
-      priceCache.set(cacheKey, price);
+    if (response.data[coin] && response.data[coin][currency] !== undefined) {
+      const price = response.data[coin][currency];
       res.json({ price });
     } else {
-      res.status(404).json({ message: 'Coin not found' });
+      res.status(404).json({ message: 'Price information not available for the specified coin and currency.' });
     }
   } catch (error) {
-    console.error(`Error fetching price for ${coin}:`, error);
-    res.status(500).json({ message: 'Error fetching price' });
+    console.error(`Error fetching price for ${coin} in ${currency}:`, error);
+    res.status(500).json({ message: 'Error fetching price from the API.' });
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
