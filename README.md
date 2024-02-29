@@ -39,8 +39,7 @@ bash Copy code:
 "git clone https://github.com/LauwisBlauw/crypto_portfolio.git"
 
 Navigate to the project directory, bash Copy code:
-"cd crypto_portfolio"
-Install dependencies
+"cd crypto_portfolio Install dependencies"
 
 bash Copy code:
 "npm install express axios express-rate-limit"
