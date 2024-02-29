@@ -1,0 +1,123 @@
+/* Main background color and font settings */
+h1 {
+    text-align: center;
+    font-size: 4rem; /* Main title size */
+    color: #E26EE5;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #F3F8FF; /* Light background */
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300; /* Light font weight */
+    margin: 0; /* Ensures the layout aligns to the edge */
+}
+
+/* Text elements styling */
+ h2, h3, h4, h5, h6, p {
+    text-align: center;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    color: #49108B; /* Primary color for text */
+}
+
+h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem; /* Adjusted spacing */
+}
+
+/* Form elements styling */
+input, select, button, .errorMessage {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+/* Currency select box and input fields */
+#currencySelect, .inputGroup input {
+    background-color: #FFFFFF; /* White background for contrast */
+    color: #49108B; /* Primary color for text */
+    border: 2px solid #7E30E1; /* Secondary color for border */
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+/* Button styling */
+button {
+    background-color: #7E30E1; /* Secondary color */
+    color: #FFFFFF; /* White text for contrast */
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #49108B; /* Darken on hover using primary color */
+}
+
+/* Error message and loading indicator */
+.errorMessage, #loadingIndicator {
+    color: #E26EE5; /* Accent color for visibility */
+    margin: 10px 0;
+}
+
+/* Delete button styling */
+.deleteRow, .deleteRow i {
+    color: white; /* Accent color for the delete icon */
+}
+
+.deleteRow:hover {
+    color: #FFFFFF; /* White text on hover */
+    background-color: #E26EE5; /* Accent color background on hover */
+    transform: rotate(-15deg); /* Rotation effect for interaction */
+}
+
+/* Currency select container positioning */
+.currency-select-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 20px;
+}
+
+/* Additional button styling for interactivity */
+#addRow, .deleteRow {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#addRow:hover {
+    transform: rotate(45deg); /* Plus button rotation for a dynamic effect */
+}
+
+/* Override Bootstrap primary button */
+.btn-primary {
+    background-color: #49108B !important; /* Your primary color */
+    border-color: #49108B !important;
+}
+
+.btn-primary:hover {
+    background-color: #7E30E1 !important; /* Slightly lighter or different for hover */
+    border-color: #7E30E1 !important;
+}
+
+/* Override Bootstrap danger button */
+.btn-danger {
+    background-color: #E26EE5 !important; /* Your accent color for danger buttons */
+    border-color: #E26EE5 !important;
+}
+
+.btn-danger:hover {
+    background-color: #C71585 !important; /* A darker shade for hover */
+    border-color: #C71585 !important;
+}
+
+/* If you have secondary buttons */
+.btn-secondary {
+    background-color: #7E30E1 !important; /* Secondary color */
+    border-color: #7E30E1 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #49108B !important; /* A variation for hover */
+    border-color: #49108B !important;
+}
