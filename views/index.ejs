@@ -115,7 +115,7 @@
                         try {
                             const response = await fetch(`/price?coin=${coinInput}&currency=${currency}`);
                             if (!response.ok) {
-                                throw new Error(response.status === 429 ? 'Rate limit exceeded. Please wait a moment before trying again.' : 'Failed to fetch price');
+                                throw new Error(response.status === 429 ? 'Rate limit exceeded. Please wait a moment before trying again.' : 'Failed to fetch price!');
                             }
                             const data = await response.json();
                             totalValue += data.price * units;
