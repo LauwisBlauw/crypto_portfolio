@@ -1,40 +1,42 @@
-/* Main background color */
+/* Main background color and font settings */
+h1 {
+    text-align: center;
+    font-size: 4rem; /* Main title size */
+    color: #E26EE5;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 body {
-    background-color: #F3F8FF;
+    background-color: #F3F8FF; /* Light background */
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 300; /* Light font weight */
+    margin: 0; /* Ensures the layout aligns to the edge */
 }
 
- h2, h3, h4, h5, h6, p, input, select, button, .errorMessage {
+/* Text elements styling */
+ h2, h3, h4, h5, h6, p {
+    text-align: center;
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 1.5rem;
-    font-weight: 300; /* Apply the light font weight consistently */
-}
-
-/* Header and titles */
-h1 {
-    color: #49108B;
-    font-size: 4rem; /* Correct property for setting font size */
-    text-align: center; /* Centers the text horizontally */
+    font-weight: 300;
+    color: #49108B; /* Primary color for text */
 }
 
 h2 {
-    text-align: center;
     font-size: 3rem;
+    margin-bottom: 1rem; /* Adjusted spacing */
 }
 
-/* Currency select box styling */
-#currencySelect {
-    background-color: #E26EE5;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
+/* Form elements styling */
+input, select, button, .errorMessage {
+    font-size: 1.5rem;
+    font-weight: 300;
 }
 
-/* Input fields styling */
-.inputGroup input {
-    border: 2px solid #7E30E1;
+/* Currency select box and input fields */
+#currencySelect, .inputGroup input {
+    background-color: #FFFFFF; /* White background for contrast */
+    color: #49108B; /* Primary color for text */
+    border: 2px solid #7E30E1; /* Secondary color for border */
     padding: 8px;
     margin: 5px 0;
     border-radius: 5px;
@@ -42,87 +44,80 @@ h2 {
 
 /* Button styling */
 button {
-    background-color: #7E30E1;
-    color: #FFFFFF;
+    background-color: #7E30E1; /* Secondary color */
+    color: #FFFFFF; /* White text for contrast */
     padding: 10px 15px;
-    border: none;
-    cursor: pointer;
     border-radius: 5px;
-    margin-top: 10px;
-    height: 50px;
-    width: 90px;
+    cursor: pointer;
 }
 
 button:hover {
-    background-color: #49108B;
+    background-color: #49108B; /* Darken on hover using primary color */
 }
 
-/* Error message styling */
-.errorMessage {
-    color: #E26EE5;
+/* Error message and loading indicator */
+.errorMessage, #loadingIndicator {
+    color: #E26EE5; /* Accent color for visibility */
     margin: 10px 0;
-} 
-/* Loading indicator */
-#loadingIndicator {
-    color: #49108B;
 }
 
-/* Delete button specific styling */
+/* Delete button styling */
+.deleteRow, .deleteRow i {
+    color: white; /* Accent color for the delete icon */
+}
+
 .deleteRow:hover {
-    background-color: #E26EE5;
-    color: #F3F8FF;
-    transform: rotate(-15deg); /* Rotate icon slightly to simulate lid opening */
+    color: #FFFFFF; /* White text on hover */
+    background-color: #E26EE5; /* Accent color background on hover */
+    transform: rotate(-15deg); /* Rotation effect for interaction */
 }
 
-
-/* Row and input group styling */
-.cryptoRow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Currency select container positioning */
+.currency-select-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 20px;
 }
 
-.inputGroup {
-    flex-grow: 1;
-    margin-right: 10px; /* Add some space between input group and delete button */
-}
-
-/* Plus button styling */
-#addRow {
+/* Additional button styling for interactivity */
+#addRow, .deleteRow {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 #addRow:hover {
-    background-color: #E26EE5; /* Change color on hover */
-    transform: rotate(45deg); /* Rotate the plus button */
+    transform: rotate(45deg); /* Plus button rotation for a dynamic effect */
 }
 
-/* Additional styles for icons (if using Font Awesome) */
-.deleteRow i, #addRow i {
-    margin-right: 5px;
+/* Override Bootstrap primary button */
+.btn-primary {
+    background-color: #49108B !important; /* Your primary color */
+    border-color: #49108B !important;
 }
 
-.deleteRow {
-    transition: transform 0.3s ease; /* Smooth transition for transform changes */
+.btn-primary:hover {
+    background-color: #7E30E1 !important; /* Slightly lighter or different for hover */
+    border-color: #7E30E1 !important;
 }
 
-.currency-select-container {
-    position: absolute; /* or 'fixed' if you want it to stay in place on scroll */
-    top: 0;
-    right: 0;
-    padding: 20px; /* Adds some space around the container */
+/* Override Bootstrap danger button */
+.btn-danger {
+    background-color: #E26EE5 !important; /* Your accent color for danger buttons */
+    border-color: #E26EE5 !important;
 }
 
-body {
-    margin: 0; /* Removes default body margin to ensure alignment to the very top and right */
-    /* Other styles remain unchanged */
+.btn-danger:hover {
+    background-color: #C71585 !important; /* A darker shade for hover */
+    border-color: #C71585 !important;
 }
 
-#currencySelect {
-    /* Your existing styles for the select box */
-    background-color: #E26EE5;
-    color: #FFFFFF;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
+/* If you have secondary buttons */
+.btn-secondary {
+    background-color: #7E30E1 !important; /* Secondary color */
+    border-color: #7E30E1 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #49108B !important; /* A variation for hover */
+    border-color: #49108B !important;
 }
