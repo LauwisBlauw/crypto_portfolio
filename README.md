@@ -36,7 +36,7 @@ Copy code
 
 Clone the repository:
 bash Copy code:
-//git clone https://github.com/LauwisBlauw/crypto_portfolio.git//
+// git clone https://github.com/LauwisBlauw/crypto_portfolio.git \\
 Navigate to the project directory
 
 bash Copy code:
