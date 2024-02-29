@@ -29,7 +29,7 @@ npm (Node Package Manager) - Comes with Node.js.
 You will also need nodemon for development to automatically restart your server when files change. If you haven't installed nodemon globally on your machine, you can do so by running:
 
 bash
-Copy code
+Copy code:
 "npm install -g nodemon" ("" not included in bash script)
 
 ## Installation
