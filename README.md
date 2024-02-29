@@ -24,43 +24,43 @@ These instructions will get you a copy of the project up and running on your loc
 ## Prerequisites
 Before you begin, ensure you have the following installed:
 
-Node.js - The runtime server environment.
+Node.js - The runtime server environment. https://nodejs.org/en
 npm (Node Package Manager) - Comes with Node.js.
 You will also need nodemon for development to automatically restart your server when files change. If you haven't installed nodemon globally on your machine, you can do so by running:
 
 bash
 Copy code
-npm install -g nodemon
+// npm install -g nodemon \\
 
 ## Installation
 
 Clone the repository:
 bash Copy code:
-git clone https://github.com/LauwisBlauw/crypto_portfolio.git
+//git clone https://github.com/LauwisBlauw/crypto_portfolio.git//
 Navigate to the project directory
 
 bash Copy code:
-cd crypto_portfolio
+// cd crypto_portfolio \\
 Install dependencies
 
 bash Copy code:
-npm install express axios express-rate-limit
+// npm install express axios express-rate-limit \\
 This will install express, axios, express-rate-limit, and other necessary packages listed in your package.json file.
 
 Configure Nodemon for Development
 Add the following scripts to your package.json:
 
-json Copy code
-"scripts": {
+json Copy code:
+// "scripts": {
   "start": "node index.js",
   "dev": "nodemon index.js"
-}
+} \\
 
 ## Running the Application
 To run the application in development mode with nodemon, ensuring the server automatically restarts upon any code changes, execute:
 
 bash Copy code:
-nodemon index.js
+// nodemon index.js \\
 This command starts the server and watches for changes, leveraging nodemon to streamline your development process. Open your web browser and navigate to http://localhost:3000 to view the application.
 
 ## Usage
